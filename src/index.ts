@@ -17,12 +17,15 @@ app.get("/screen", async (c) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://api.chatwars.me/webview/map");
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    const screenBuffer = await page.locator(".map-grid-wrapper").screenshot();
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+    const screenBuffer = await page.locator(".map-grid-wrapper").screenshot({
+      type: "jpeg",
+      quality: 100,
+    });
     await browser.close();
     return c.body(screenBuffer, {
       headers: {
-        "Content-Type": "image/png",
+        "Content-Type": "image/jpeg",
         "Cache-Control": "no-cache",
       },
     });
@@ -32,7 +35,7 @@ app.get("/screen", async (c) => {
   }
 });
 
-const port = 3000;
+const port = Number(process.env.PORT) || 4000;
 console.log(`Server is running on port ${port}`);
 
 serve({
